@@ -111,7 +111,70 @@ class BlackjackMDP(util.MDP):
     # in the list returned by succAndProbReward.
     def succAndProbReward(self, state, action):
         # BEGIN_YOUR_ANSWER (our solution is 44 lines of code, but don't worry if you deviate from this)
-        raise NotImplementedError  # remove this line before writing code
+        totalCardValueInHand, nextCardIndexIfPeeked, deckCardCounts= state
+        results = []
+
+        if deckCardCounts is None : return []
+
+        if action is 'Quit' :
+            # 게임 종료
+            deckCardCounts = None
+            reward = totalCardValueInHand
+            results.append(((totalCardValueInHand, nextCardIndexIfPeeked, deckCardCounts), 1, reward))
+        else :
+            total_counts = sum(deckCardCounts)
+            if action is 'Take' :            
+                # Take card
+                if nextCardIndexIfPeeked :
+                    # 1. Peek 한 경우 : deckCardCounts update
+                    new_dCounts = list(deckCardCounts)
+                    new_dCounts[nextCardIndexIfPeeked] -= 1
+                    reward = 0
+
+                    # 2. total Card Value Check(threshold)
+                    totalCardValueInHand += self.cardValues[nextCardIndexIfPeeked]
+                    if all(i == 0 for i in new_dCounts) : 
+                        new_dCounts = None
+                    else:
+                        new_dCounts = None if totalCardValueInHand > self.threshold else tuple(new_dCounts)
+
+                    # 3. reward update
+                    if new_dCounts is None and totalCardValueInHand < self.threshold : reward = totalCardValueInHand
+
+                    # 4. result append
+                    results.append(((totalCardValueInHand, None, new_dCounts), 1, reward))
+                else:
+                    # deckCard 중에서 take_value 정하기 (Random)
+                    for index, count in enumerate(deckCardCounts):
+                        if count > 0 :  
+                            prob = count / total_counts
+                            new_dCounts = list(deckCardCounts)
+                            reward = 0
+
+                            # 1. 각 index에 대하여 deckCardCounts update
+                            new_dCounts[index] -= 1
+
+                            # 2. total Card Value Check(threshold)
+                            new_tValue = totalCardValueInHand + self.cardValues[index] 
+                            if all(i == 0 for i in new_dCounts) : 
+                                new_dCounts = None
+                            else:                                                          
+                                new_dCounts = None if new_tValue > self.threshold else tuple(new_dCounts)
+
+                            # 3. reward update
+                            if new_dCounts is None and new_tValue < self.threshold : reward = new_tValue
+
+                            # 4. result append
+                            results.append(((new_tValue, None, new_dCounts), prob, reward))
+            elif action is 'Peek' :
+                # 이미 Peek했는지 Check -> True인 경우 return []
+                if nextCardIndexIfPeeked : return []
+                else :
+                    for index, count in enumerate(deckCardCounts):
+                        if count > 0 :   
+                            prob = count / total_counts
+                            results.append(((totalCardValueInHand, index, deckCardCounts), prob, -self.peekCost))
+        return results
         # END_YOUR_ANSWER
 
     def discount(self):
@@ -170,7 +233,11 @@ class Qlearning(util.RLAlgorithm):
             return
 
         # BEGIN_YOUR_ANSWER (our solution is 8 lines of code, but don't worry if you deviate from this)
-        raise NotImplementedError  # remove this line before writing code
+        Q_opt = self.getQ(state, action)
+        V_opt = 0 if isLast(newState) else max(self.getQ(newState, newAction) for newAction in self.actions(newState))
+        n = self.getStepSize()   
+        for key, value in self.featureExtractor(state, action):
+            self.weights[key] = self.weights[key] - (n*(Q_opt-(reward+self.discount*V_opt))*value) 
         # END_YOUR_ANSWER
 
 
@@ -193,7 +260,11 @@ class SARSA(Qlearning):
             return
 
         # BEGIN_YOUR_ANSWER (our solution is 8 lines of code, but don't worry if you deviate from this)
-        raise NotImplementedError  # remove this line before writing code
+        Q_phi = self.getQ(state, action)
+        Q_est = 0 if isLast(newState) else self.getQ(newState, newAction)
+        n = self.getStepSize()
+        for key, value in self.featureExtractor(state, action):
+            self.weights[key] = self.weights[key] - (n*(Q_phi-(reward+self.discount*Q_est))*value) 
         # END_YOUR_ANSWER
 
 # Return a singleton list containing indicator feature (if exist featurevalue = 1)
@@ -221,5 +292,12 @@ def identityFeatureExtractor(state, action):
 def blackjackFeatureExtractor(state, action):
     total, nextCard, counts = state
     # BEGIN_YOUR_ANSWER (our solution is 8 lines of code, but don't worry if you deviate from this)
-    raise NotImplementedError  # remove this line before writing code
+    results = []
+    results.append(((total, action), 1))
+    if counts is not None :
+        presence = tuple(1 if x != 0 else 0 for x in counts)
+        results.append(((presence, action), 1))    
+        for i, value in enumerate(counts) :
+            results.append(((i, value, action), 1))
+    return results
     # END_YOUR_ANSWER

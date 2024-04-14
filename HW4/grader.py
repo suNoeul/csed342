@@ -39,27 +39,21 @@ def test_wrong(func_name, assertion=lambda pred: True):
 # Problem 1
 
 def test_1_1():
-    tests =[[
-                np.array([[0, 0, -50, 20],
-                          [0, 0, -50,  0],
-                          [2, 0,   0,  0]], 
-                          dtype = np.float64),
-                1, -1, 10,
-                np.array([[13, 14, -50, 20],
-                          [14, 15, -50, 19],
-                          [ 2, 16,  17, 18]], 
-                          dtype = np.float64)
-            ],
+    tests =[[np.array([[0, 0, -50, 20],
+                    [0, 0, -50,  0],
+                    [2, 0,   0,  0]], dtype = np.float64),
+            1, -1, 10,
+            np.array([[13, 14, -50, 20],
+                    [14, 15, -50, 19],
+                    [ 2, 16,  17, 18]], dtype = np.float64)],
 
             [np.array([[0, -50, 10, 0],
-                       [0,   0,-30, 0],
-                       [0,   0,  0, 0]]),
-                1, -1, 10,
-                np.array([[2, -50,  10,   9],
-                          [3,   4, -30,   8],
-                          [4,   5,   6,   7]], 
-                          dtype = np.float64)
-            ]
+                    [0,   0,-30, 0],
+                    [0,   0,  0, 0]]),
+            1, -1, 10,
+            np.array([[  2,-50,  10,   9],
+                      [  3,  4, -30,   8],
+                      [  4,  5,   6,   7]], dtype = np.float64)]
     ]
     for grid_world, discount, moveReward, numIters, answer in tests:
         volcano_crossing = submission.VolcanoCrossing(grid_world, discount=discount, moveReward=moveReward)
