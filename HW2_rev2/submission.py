@@ -25,7 +25,7 @@ def problem_1a():
     mini_reviews = [ ("so interesting", +1), ("great plot", +1), ("so bored", -1), ("not interesting", -1) ]
 
     # 학습률(step_size) & weights 정의
-    weights = {}
+    weights = collections.defaultdict(int)
     step_size = 1
   
     for review, label in mini_reviews :
@@ -34,9 +34,6 @@ def problem_1a():
         
         # feature vector 생성
         for word in words :
-                if word not in weights :
-                    weights[word] = 0
-
                 feature_vector[word] += 1
 
         # Loss 계산 : w·ϕ(x)*y
@@ -50,7 +47,7 @@ def problem_1a():
             for word in feature_vector :
                 weights[word] += step_size * (feature_vector[word] * label)
     
-    return weights
+    return dict(weights)
    
     # END_YOUR_ANSWER
 

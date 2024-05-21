@@ -161,7 +161,19 @@ class MinimaxAgent(MultiAgentSearchAgent):
         The depth to which search should continue
     """
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+
+    # Collect legal moves and successor states 
+    legalMoves = gameState.getLegalActions(0)
+
+    # Choose one of the best actions
+    scores = [self.getQ(gameState, action) for action in legalMoves]
+    bestScore = max(scores)
+    bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+    chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+
+    # print("Best minimax value at depth {}: {}".format(self.depth, bestScore))
+    return legalMoves[chosenIndex]
+
     # END_YOUR_ANSWER
   
   def getQ(self, gameState, action):
@@ -172,7 +184,32 @@ class MinimaxAgent(MultiAgentSearchAgent):
       pacman won, pacman lost or there are no legal moves.
     """
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+
+    # Define minimix
+    def minimax(agentIndex, depth, state):
+      # Case 1. IsEnd(s) : return Utility(s)
+      if state.isWin() or state.isLose() :
+        return state.getScore()
+           
+      # Case 2. d = 0 : return Eval(s)
+      if depth == 0:
+        return self.evaluationFunction(state)
+      
+      actions = state.getLegalActions(agentIndex)
+      nextIndex = (agentIndex + 1) % state.getNumAgents()
+      nextDepth = depth - 1 if nextIndex == 0 else depth
+
+      # Case 3. Player(s) = Agent : return max V(Succ(s,a), d) 
+      if agentIndex == self.index : 
+        return max(minimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions)
+      
+      # Case 4. Player(s) = Opp : return min V(Succ(s,a), d)
+      else : 
+        return min(minimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions)
+    
+    # Start minimax from the first ghost
+    return minimax(1, self.depth, gameState.generateSuccessor(0, action))
+
     # END_YOUR_ANSWER
 
 ######################################################################################
@@ -192,7 +229,19 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     """
 
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    
+    # Collect legal moves and successor states 
+    legalMoves = gameState.getLegalActions(0)
+
+    # Choose one of the best actions
+    scores = [self.getQ(gameState, action) for action in legalMoves]
+    bestScore = max(scores)
+    bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+    chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+
+    # print("Best minimax value at depth {}: {}".format(self.depth, bestScore))
+    return legalMoves[chosenIndex]
+    
     # END_YOUR_ANSWER
   
   def getQ(self, gameState, action):
@@ -200,7 +249,32 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
       Returns the expectimax Q-Value using self.depth and self.evaluationFunction.
     """
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    
+    # Define minimix
+    def expectimax(agentIndex, depth, state):
+      # Case 1. IsEnd(s) : return Utility(s)
+      if state.isWin() or state.isLose() :
+        return state.getScore()
+           
+      # Case 2. d = 0 : return Eval(s)
+      if depth == 0:
+        return self.evaluationFunction(state)
+      
+      actions = state.getLegalActions(agentIndex)
+      nextIndex = (agentIndex + 1) % state.getNumAgents()
+      nextDepth = depth - 1 if nextIndex == 0 else depth
+
+      # Case 3. Player(s) = Agent : return max V(Succ(s,a), d) 
+      if agentIndex == self.index : 
+        return max(expectimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions)
+      
+      # Case 4. Player(s) = Opp : return expected value
+      else : 
+        return sum(expectimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions) / len(actions)
+    
+    # Start minimax from the first ghost
+    return expectimax(1, self.depth, gameState.generateSuccessor(0, action))
+
     # END_YOUR_ANSWER
 
 ######################################################################################
@@ -214,13 +288,16 @@ class BiasedExpectimaxAgent(MultiAgentSearchAgent):
   def getAction(self, gameState):
     """
       Returns the biased-expectimax action using self.depth and self.evaluationFunction
-
-      All ghosts should be modeled as choosing stop-biasedly from their
-      legal moves.
+      All ghosts should be modeled as choosing stop-biasedly from their legal moves.
     """
 
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    legalMoves = gameState.getLegalActions(0)
+    scores = [self.getQ(gameState, action) for action in legalMoves]
+    bestScore = max(scores)
+    bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+    chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+    return legalMoves[chosenIndex]
     # END_YOUR_ANSWER
   
   def getQ(self, gameState, action):
@@ -228,7 +305,30 @@ class BiasedExpectimaxAgent(MultiAgentSearchAgent):
       Returns the biased-expectimax Q-Value using self.depth and self.evaluationFunction.
     """
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    def biasedexpectimax(agentIndex, depth, state):
+      # Case 1. IsEnd(s) : return Utility(s)
+      if state.isWin() or state.isLose() :
+        return state.getScore()
+           
+      # Case 2. d = 0 : return Eval(s)
+      if depth == 0:
+        return self.evaluationFunction(state)
+      
+      actions = state.getLegalActions(agentIndex)
+      nextIndex = (agentIndex + 1) % state.getNumAgents()
+      nextDepth = depth - 1 if nextIndex == 0 else depth
+
+      # Case 3. Player(s) = Agent : return max V(Succ(s,a), d) 
+      if agentIndex == self.index : 
+        return max(biasedexpectimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions)
+      
+      # Case 4. Player(s) = Opp : return Biased expected value
+      else : 
+        Weight = [0.5 * (1/len(actions)) if action != Directions.STOP else 0.5 + 0.5 * (1/len(actions)) for action in actions]
+        return sum(biasedexpectimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) * w for action, w in zip(actions, Weight)) 
+    
+    # Start minimax from the first ghost
+    return biasedexpectimax(1, self.depth, gameState.generateSuccessor(0, action))
     # END_YOUR_ANSWER
 
 ######################################################################################
@@ -242,13 +342,17 @@ class ExpectiminimaxAgent(MultiAgentSearchAgent):
   def getAction(self, gameState):
     """
       Returns the expectiminimax action using self.depth and self.evaluationFunction
-
-      The even-numbered ghost should be modeled as choosing uniformly at random from their
-      legal moves.
+      The even-numbered ghost should be modeled as choosing uniformly at random from their legal moves.
     """
 
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    legalMoves = gameState.getLegalActions(0)
+    scores = [self.getQ(gameState, action) for action in legalMoves]
+    bestScore = max(scores)
+    bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+    chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+    # print("Best minimax value at depth {}: {}".format(self.depth, bestScore))
+    return legalMoves[chosenIndex]
     # END_YOUR_ANSWER
   
   def getQ(self, gameState, action):
@@ -256,7 +360,31 @@ class ExpectiminimaxAgent(MultiAgentSearchAgent):
       Returns the expectiminimax Q-Value using self.depth and self.evaluationFunction.
     """
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    def expectiminimax(agentIndex, depth, state):
+      # Case 1. IsEnd(s) : return Utility(s)
+      if state.isWin() or state.isLose() :
+        return state.getScore()
+           
+      # Case 2. d = 0 : return Eval(s)
+      if depth == 0:
+        return self.evaluationFunction(state)
+      
+      actions = state.getLegalActions(agentIndex)
+      nextIndex = (agentIndex + 1) % state.getNumAgents()
+      nextDepth = depth - 1 if nextIndex == 0 else depth
+
+      # Case 3. Player(s) = Agent : return max V(Succ(s,a), d) 
+      if agentIndex == self.index : 
+        return max(expectiminimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions)
+      
+      # Case 4. Player(s) = Opp : return expected minmax value
+      else : 
+        if agentIndex % 2 == 0 : # Even case
+          return sum(expectiminimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions) / len(actions)
+        else : # Odd case
+          return min(expectiminimax(nextIndex, nextDepth, state.generateSuccessor(agentIndex, action)) for action in actions)
+            
+    return expectiminimax(1, self.depth, gameState.generateSuccessor(0, action))
     # END_YOUR_ANSWER
 
 ######################################################################################
@@ -273,7 +401,13 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
 
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    legalMoves = gameState.getLegalActions(0)
+    scores = [self.getQ(gameState, action) for action in legalMoves]
+    bestScore = max(scores)
+    bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+    chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+    # print("Best minimax value at depth {}: {}".format(self.depth, bestScore))
+    return legalMoves[chosenIndex]
     # END_YOUR_ANSWER
   
   def getQ(self, gameState, action):
@@ -281,7 +415,46 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
       Returns the expectiminimax Q-Value using self.depth and self.evaluationFunction.
     """
     # BEGIN_YOUR_ANSWER
-    raise NotImplementedError  # remove this line before writing code
+    def alphabeta(agentIndex, depth, alpha, beta, state) :
+      # Case 1. IsEnd(s) : return Utility(s)
+      if state.isWin() or state.isLose() :
+        return state.getScore()
+           
+      # Case 2. d = 0 : return Eval(s)
+      if depth == 0:
+        return self.evaluationFunction(state)
+      
+      actions = state.getLegalActions(agentIndex)
+      nextIndex = (agentIndex + 1) % state.getNumAgents()
+      nextDepth = depth - 1 if nextIndex == 0 else depth
+      
+
+      # Case 3. Player(s) = Agent : return max V(Succ(s,a), d) 
+      if agentIndex == self.index : 
+        value = float('-inf')
+        for action in actions :
+          value = max(value, alphabeta(nextIndex, nextDepth, alpha, beta, state.generateSuccessor(agentIndex, action)))
+          alpha = max(alpha, value)
+          if beta <= alpha : 
+            break
+        return value
+      # Case 4. Player(s) = Opp : return expected minmax value
+      else :
+        value = float('inf')        
+        for action in actions:
+          if agentIndex % 2 == 0 : # Even case
+            return sum(alphabeta(nextIndex, nextDepth, alpha, beta, state.generateSuccessor(agentIndex, action)) for action in actions) / len(actions)
+          else : # Odd case   
+            value = min(value, alphabeta(nextIndex, nextDepth, alpha, beta, state.generateSuccessor(agentIndex, action)))
+            beta = min(beta, value)
+            if beta <= alpha:
+                break  # Alpha prune
+        return value
+      
+    alpha = float('-inf')
+    beta  = float('inf')
+    return alphabeta(1, self.depth, alpha, beta, gameState.generateSuccessor(0, action))
+    
     # END_YOUR_ANSWER
 
 ######################################################################################
@@ -293,7 +466,45 @@ def betterEvaluationFunction(currentGameState):
   """
 
   # BEGIN_YOUR_ANSWER
-  raise NotImplementedError  # remove this line before writing code
+
+  newPos = currentGameState.getPacmanPosition()
+  newFood = currentGameState.getFood()
+  newGhostStates = currentGameState.getGhostStates()
+  newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+  scared = [ghost for ghost in newGhostStates if ghost.scaredTimer]
+  if scared :
+    minghostDist = min(map(lambda x : manhattanDistance(newPos, x.getPosition()), scared))
+  else :
+    minghostDist = 0
+
+  anyGhostScared = any(time > 0 for time in newScaredTimes)
+  capsules = currentGameState.getCapsules()
+  foods = newFood.asList()
+  capsuleDistances = [manhattanDistance(newPos, capsule) for capsule in capsules]
+  foodDistances = [manhattanDistance(newPos, food) for food in foods]
+  
+  score = currentGameState.getScore()
+  # if part : newScaredTimes가 0 이상이 경우 -> 음식이나 캡슐 향해 공격적 진행
+  if anyGhostScared :
+    # 1-1. 캡슐이 1개 이상 있는 경우 : 
+    if capsules :
+      nearestCapsuleDistance = min(capsuleDistances)
+      score += 50 / (nearestCapsuleDistance + 1) 
+    # 1-2. 캡슐을 다 먹어서 맵에 없는 경우 : 음식을 향해 이동
+    elif foods :
+      nearestFoodDistance = min(foodDistances) 
+      score += 100 / (nearestFoodDistance + 1) 
+    score += 200 / (minghostDist + 1)
+  # else part : newScaredTimes가 활성화 되지 않은 경우
+  else :
+    # 2. foodDistance와 CapsuleDistance를 반영
+    if capsules:
+      nearestCapsuleDistance = min(capsuleDistances)
+      score += 200 / (nearestCapsuleDistance + 1)  
+    nearestFoodDistance = min(foodDistances)
+    score += 50 / (nearestFoodDistance + 1)  
+  
+  return score
   # END_YOUR_ANSWER
 
 def choiceAgent():
@@ -304,8 +515,36 @@ def choiceAgent():
     (e.g. 'MinimaxAgent', 'BiasedExpectimaxAgent', 'MyOwnAgent', ...)
   """
   # BEGIN_YOUR_ANSWER
-  raise NotImplementedError  # remove this line before writing code
+  
+  return 'AlphaBetaAgent'
+
   # END_YOUR_ANSWER
 
 # Abbreviation
 better = betterEvaluationFunction
+
+# PS C:\Users\PC\Desktop\AI(CSED342)\HW5> python pacman.py -l smallClassic -p ExpectiminimaxAgent -a evalFn=better -c -n 20 -q
+# Pacman emerges victorious! Score: 966
+# Pacman died! Score: 413
+# Pacman emerges victorious! Score: 1628
+# Pacman emerges victorious! Score: 1557
+# Pacman emerges victorious! Score: 1024
+# Pacman emerges victorious! Score: 1448
+# Pacman emerges victorious! Score: 1245
+# Pacman died! Score: 129
+# Pacman emerges victorious! Score: 1366
+# Pacman emerges victorious! Score: 1532
+# Pacman emerges victorious! Score: 1408
+# Pacman emerges victorious! Score: 1631
+# Pacman emerges victorious! Score: 1457
+# Pacman died! Score: 54
+# Pacman died! Score: -23
+# Pacman emerges victorious! Score: 1235
+# Pacman emerges victorious! Score: 1326
+# Pacman emerges victorious! Score: 1445
+# Pacman emerges victorious! Score: 1319
+# Pacman emerges victorious! Score: 1327
+# Average Score: 1124.35
+# Scores:        966, 413, 1628, 1557, 1024, 1448, 1245, 129, 1366, 1532, 1408, 1631, 1457, 54, -23, 1235, 1326, 1445, 1319, 1327
+# Win Rate:      16/20 (0.80)
+# Record:        Win, Loss, Win, Win, Win, Win, Win, Loss, Win, Win, Win, Win, Win, Loss, Loss, Win, Win, Win, Win, Win

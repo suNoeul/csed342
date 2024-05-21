@@ -101,7 +101,7 @@ def getRealCosts():
 
 
 def add_parts_1a(grader, submission):
-    if grader.selectedPartName in ['1a-1-basic', '1a-2-basic', '1a-3-hidden', None]:  # avoid timeouts
+    if grader.selectedPartName in ['1a-2-basic', '1a-3-hidden', '1a-4-hidden', None]:  # avoid timeouts
         unigramCost, _, _ = getRealCosts()
 
     def t_1a_1():

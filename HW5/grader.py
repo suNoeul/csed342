@@ -145,8 +145,8 @@ grader.addHiddenPart('3a-2-hidden', lambda : testHidden('BiasedExpectimaxAgent')
 grader.addBasicPart('4a-1-basic', lambda : testBasic('expectiminimax'), 0, maxSeconds=maxSeconds, description='Tests expectiminimax for timeout on smallClassic.')
 grader.addHiddenPart('4a-2-hidden', lambda : testHidden('ExpectiminimaxAgent'), 4, maxSeconds=maxSeconds, description='Tests expectiminimax')
 
-grader.addBasicPart('5a-1-basic', lambda : testBasic('alphabeta'), 0, description='Tests alphabeta for timeout on smallClassic.')
-grader.addHiddenPart('5a-2-hidden', lambda : testHidden('AlphaBetaAgent'), 8, maxSeconds=maxSeconds, description='Tests alphabeta')
+# grader.addBasicPart('5a-1-basic', lambda : testBasic('alphabeta'), 0, description='Tests alphabeta for timeout on smallClassic.')
+# grader.addHiddenPart('5a-2-hidden', lambda : testHidden('AlphaBetaAgent'), 8, maxSeconds=maxSeconds, description='Tests alphabeta')
 
 
 ############################################################

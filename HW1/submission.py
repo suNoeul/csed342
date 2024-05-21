@@ -50,14 +50,18 @@ def find_frequent_words(text:str, freq:int)->Set[str]:
     """
     # BEGIN_YOUR_ANSWER (our solution is 3 lines of code, but don't worry if you deviate from this)
 
+    # words = text.split()
+    # counts = collections.defaultdict(int)
+
+    # for word in words:
+    #     counts[word] += 1
+
+    # result = {word for word, count in counts.items() if count == freq}
+    # return result
+
     words = text.split()
-    counts = collections.defaultdict(int)
-
-    for word in words:
-        counts[word] += 1
-
-    result = {word for word, count in counts.items() if count == freq}
-    return result
+    word_freq = {word: words.count(word) for word in set(words)}
+    return {word for word, count in word_freq.items() if count == freq}
 
     # END_YOUR_ANSWER
 
@@ -71,14 +75,18 @@ def find_nonsingleton_words(text: str) -> Set[str]:
     """
     # BEGIN_YOUR_CODE (our solution is 4 lines of code, but don't worry if you deviate from this)
 
+    # words = text.split()
+    # counts = collections.defaultdict(int)
+
+    # for word in words:
+    #     counts[word] += 1
+
+    # result = {word for word, count in counts.items() if count > 1}
+    # return result
+
     words = text.split()
-    counts = collections.defaultdict(int)
-
-    for word in words:
-        counts[word] += 1
-
-    result = {word for word, count in counts.items() if count > 1}
-    return result
+    word_freq = {word: words.count(word) for word in set(words)}
+    return {word for word, count in word_freq.items() if count > 1}
 
     # END_YOUR_CODE
 
@@ -124,12 +132,14 @@ def dense_to_sparse_vector(v:DenseVector)->SparseVector:
     """
     # BEGIN_YOUR_ANSWER (our solution is 1 lines of code, but don't worry if you deviate from this)
 
-    sparse_vector = collections.defaultdict(float)
-    for i, value in enumerate(v):
-        if value != 0:
-            sparse_vector[i] = value
+    # sparse_vector = collections.defaultdict(float)
+    # for i, value in enumerate(v):
+    #     if value != 0:
+    #         sparse_vector[i] = value
 
-    return sparse_vector
+    # return sparse_vector
+
+    return collections.defaultdict(float, {i: val for i, val in enumerate(v) if val})
 
     # END_YOUR_ANSWER
 
@@ -171,9 +181,8 @@ def increment_sparse_vector(v1: SparseVector, scale: float, v2: SparseVector) ->
     """
     # BEGIN_YOUR_CODE (our solution is 2 lines of code, but don't worry if you deviate from this)
 
-    if scale != 0:
-        for i, value in v2.items() :
-            v1[i] += scale * value
+    for i, value in v2.items() :
+        v1[i] += scale * value
 
     # END_YOUR_CODE
 
