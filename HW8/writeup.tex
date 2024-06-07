@@ -1,0 +1,101 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
+\usepackage{kotex}
+
+\setlist{nolistsep}  % 이 설정은 itemize, enumerate 등의 간격을 조정합니다.
+
+\begin{document}
+
+\begin{center}
+{\Large CSED342 Assignment 8 \vspace{10pt}}
+
+\begin{tabular}{rl}
+Student ID: & 20200703 \\
+Name: & SoonHo Kim \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+By turning in this assignment, I agree by the POSTECH honor code and declare that all of this is my own work.
+\end{center}
+
+{\fontsize{10}{13}\selectfont
+\section*{Problem 2a}
+
+주어진 지식 베이스: \( KB = \{ (A \lor B) \rightarrow \neg C, \neg(\neg A \lor C) \rightarrow D, A \} \)
+
+\subsection*{1. KB CNF 변환 과정}
+
+\noindent1. \((A \lor B) \rightarrow \neg C\): \\
+   - \(\rightarrow\) 제거: \(\neg(A \lor B) \lor \neg C\) \\
+   - 드모르간 법칙: \((\neg A \land \neg B) \lor \neg C\) \\
+   - 분배 법칙: \((\neg A \lor \neg C) \land (\neg B \lor \neg C)\) \\
+   - 최종 형태: \((\neg A \lor \neg C)\), \((\neg B \lor \neg C)\) \\
+
+\noindent2. \(\neg(\neg A \lor C) \rightarrow D\): \\
+   - \(\rightarrow\) 제거: \(\neg(\neg(\neg A \lor C)) \lor D\) \\
+   - 이중 부정 제거: \((\neg A \lor C) \lor D\) \\
+   - 최종 형태: \((\neg A \lor C \lor D)\) \\
+
+\noindent3. \(A\)는 이미 CNF. \\
+
+\noindent 변환된 지식 베이스: \( KB = \{ (\neg A \lor \neg C), (\neg B \lor \neg C), (\neg A \lor C \lor D), A \} \)
+
+\subsection*{2. Modus Ponens 적용 과정}
+
+\noindent1. \(A\)를 사용하여 \( (\neg A \lor C \lor D) \)를 단순화: \\
+   - \(A\)가 참이므로, \( (\neg A \lor C \lor D) \)는 \( C \lor D \) \\
+   - 지식 베이스에 \( C \lor D \)를 추가: \( KB = \{ (\neg A \lor \neg C), (\neg B \lor \neg C), (\neg A \lor C \lor D), A, (C \lor D) \} \) \\
+
+\noindent2. \(A\)를 사용하여 \( (\neg A \lor \neg C) \)를 단순화: \\
+   - \(A\)가 참이므로, \( (\neg A \lor \neg C) \)는 \( \neg C \) \\
+   - 지식 베이스에 \( \neg C \)를 추가: \( KB = \{ (\neg A \lor \neg C), (\neg B \lor \neg C), (\neg A \lor C \lor D), A, (C \lor D), \neg C \} \) \\
+
+\noindent3. \( \neg C \)와 \( (C \lor D) \)를 사용하여 \( D \)를 도출: \\
+   - \( \neg C \)가 참이므로, \( C \lor D \)에서 \( C \)는 거짓이 되어 \( D \)가 참 \\
+   - 지식 베이스에 \( D \)를 추가: \( KB = \{ (\neg A \lor \neg C), (\neg B \lor \neg C), (\neg A \lor C \lor D), A, (C \lor D), \neg C, D \} \) \\
+
+\noindent 최종적으로 \(D\)를 성공적으로 도출. \\ \\ \\ 
+
+\section*{Problem 2b}
+
+주어진 지식 베이스: \( KB = \{ A \lor B, B \rightarrow C, (A \lor C) \rightarrow D \} \)
+
+\subsection*{1. KB CNF 변환 과정}
+
+\noindent1. \( A \lor B \): \\
+   - 이미 CNF. \\
+
+\noindent2. \( B \rightarrow C \): \\
+   - \(\rightarrow\) 제거: \(\neg B \lor C\) \\
+   - 최종 형태: \((\neg B \lor C)\) \\
+
+\noindent3. \( (A \lor C) \rightarrow D \): \\
+   - \(\rightarrow\) 제거: \(\neg (A \lor C) \lor D\) \\
+   - 드모르간 법칙: \((\neg A \land \neg C) \lor D\) \\
+   - 분배 법칙: \((\neg A \lor D) \land (\neg C \lor D)\) \\
+
+\noindent 변환된 지식 베이스: \( KB = \{(A \lor B), (\neg B \lor C), (\neg A \lor D), (\neg C \lor D) \} \)
+
+\subsection*{2. Resolution 적용 과정}
+
+\noindent1. \( A \lor B \)와 \( \neg B \lor C \) 사용, \( A \lor C \) 도출: \\
+   - \( A \lor B \) ,\( \neg B \lor C \) \\
+   - \( B \)와 \( \neg B \)가 상쇄되므로 \( A \lor C \)가 도출됨 \\
+   - 지식 베이스에 \( A \lor C \)를 추가: \( KB = \{(A \lor B), (\neg B \lor C), (A \lor C), (\neg A \lor D), (\neg C \lor D) \} \) \\
+
+\noindent2. \( A \lor C \)와 \( \neg A \lor D \) 사용, \( C \lor D \) 도출: \\
+   - \( A \lor C \) , \( \neg A \lor D \) \\
+   - \( A \)와 \( \neg A \)가 상쇄되므로 \( C \lor D \)가 도출됨 \\
+   - 지식 베이스에 \( C \lor D \)를 추가: \( KB = \{(A \lor B), (\neg B \lor C), (A \lor C), (\neg A \lor D), (C \lor D), (\neg C \lor D) \} \) \\
+
+\noindent3. \( C \lor D \)와 \( \neg C \lor D \) 사용, \( D \) 도출: \\
+   - \( C \lor D \) , \( \neg C \lor D \) \\
+   - \( C \)와 \( \neg C \)가 상쇄되므로 \( D \)가 도출됨 \\
+   - 지식 베이스에 \( D \)를 추가: \( KB = \{(A \lor B), (\neg B \lor C), (A \lor C), (\neg A \lor D), (C \lor D), (\neg C \lor D), D \} \)\\
+
+\noindent 최종적으로 \(D\)를 성공적으로 도출.
+
+}
+
+\end{document}

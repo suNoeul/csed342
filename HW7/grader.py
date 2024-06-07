@@ -217,253 +217,253 @@ def test2a_2(): # let's test them together! Very important
           
 grader.add_hidden_part('2a-2-hidden', test2a_2, 2, description="advanced test for emission AND transition probabilities, strict time limit", max_seconds=5)
 
-# ############################################################
-# # Problem 3: Particle filtering
+############################################################
+# Problem 3: Particle filtering
 
-# def test3a_0():
-#     random.seed(3)
+def test3a_0():
+    random.seed(3)
 
-#     pf = submission.ParticleFilter(30, 13)
+    pf = submission.ParticleFilter(30, 13)
 
-#     pf.observe(555, 193, 800)
-#     grader.require_is_equal(0.02, pf.belief.getProb(20, 4))
-#     grader.require_is_equal(0.04, pf.belief.getProb(21, 5))
-#     grader.require_is_equal(0.94, pf.belief.getProb(22, 6))
-#     grader.require_is_equal(0.0, pf.belief.getProb(8, 4))
+    pf.observe(555, 193, 800)
+    grader.require_is_equal(0.02, pf.belief.getProb(20, 4))
+    grader.require_is_equal(0.04, pf.belief.getProb(21, 5))
+    grader.require_is_equal(0.94, pf.belief.getProb(22, 6))
+    grader.require_is_equal(0.0, pf.belief.getProb(8, 4))
 
-#     pf.observe(525, 193, 830)
-#     grader.require_is_equal(0.0, pf.belief.getProb(20, 4))
-#     grader.require_is_equal(0.0, pf.belief.getProb(21, 5))
-#     grader.require_is_equal(1.0, pf.belief.getProb(22, 6))
-#     grader.require_is_equal(0.0, pf.belief.getProb(8, 4))
+    pf.observe(525, 193, 830)
+    grader.require_is_equal(0.0, pf.belief.getProb(20, 4))
+    grader.require_is_equal(0.0, pf.belief.getProb(21, 5))
+    grader.require_is_equal(1.0, pf.belief.getProb(22, 6))
+    grader.require_is_equal(0.0, pf.belief.getProb(8, 4))
 
-# grader.add_basic_part('3a-0-basic', test3a_0, 2, description="3a basic test for PF observe")
+grader.add_basic_part('3a-0-basic', test3a_0, 2, description="3a basic test for PF observe")
 
-# def test3a_1():
-#     random.seed(3)
-#     pf = submission.ParticleFilter(30, 13)
-#     grader.require_is_equal(69, len([k for k, v in list(pf.particles.items()) if v > 0])) # This should not fail unless your code changed the random initialization code.
+def test3a_1():
+    random.seed(3)
+    pf = submission.ParticleFilter(30, 13)
+    grader.require_is_equal(69, len([k for k, v in list(pf.particles.items()) if v > 0])) # This should not fail unless your code changed the random initialization code.
 
-#     pf.elapseTime()
-#     grader.require_is_equal(200, sum(pf.particles.values())) # Do not lose particles
-#     grader.require_is_equal(58, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
+    pf.elapseTime()
+    grader.require_is_equal(200, sum(pf.particles.values())) # Do not lose particles
+    grader.require_is_equal(58, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
 
-#     grader.require_is_equal(6, pf.particles[(3, 9)])
-#     grader.require_is_equal(0, pf.particles[(2, 10)])
-#     grader.require_is_equal(3, pf.particles[(8, 4)])
-#     grader.require_is_equal(2, pf.particles[(12, 6)])
-#     grader.require_is_equal(2, pf.particles[(7, 8)])
-#     grader.require_is_equal(2, pf.particles[(11, 6)])
-#     grader.require_is_equal(0, pf.particles[(18, 7)])
-#     grader.require_is_equal(1, pf.particles[(20, 5)])
+    grader.require_is_equal(6, pf.particles[(3, 9)])
+    grader.require_is_equal(0, pf.particles[(2, 10)])
+    grader.require_is_equal(3, pf.particles[(8, 4)])
+    grader.require_is_equal(2, pf.particles[(12, 6)])
+    grader.require_is_equal(2, pf.particles[(7, 8)])
+    grader.require_is_equal(2, pf.particles[(11, 6)])
+    grader.require_is_equal(0, pf.particles[(18, 7)])
+    grader.require_is_equal(1, pf.particles[(20, 5)])
 
-#     pf.elapseTime()
-#     grader.require_is_equal(200, sum(pf.particles.values())) # Do not lose particles
-#     grader.require_is_equal(57, len([k for k, v in list(pf.particles.items()) if v > 0])) # Slightly more particles lie on the same (row, col) locations
+    pf.elapseTime()
+    grader.require_is_equal(200, sum(pf.particles.values())) # Do not lose particles
+    grader.require_is_equal(57, len([k for k, v in list(pf.particles.items()) if v > 0])) # Slightly more particles lie on the same (row, col) locations
 
-#     grader.require_is_equal(4, pf.particles[(3, 9)])
-#     grader.require_is_equal(0, pf.particles[(2, 10)]) # 0 --> 0
-#     grader.require_is_equal(5, pf.particles[(8, 4)])
-#     grader.require_is_equal(3, pf.particles[(12, 6)])
-#     grader.require_is_equal(0, pf.particles[(7, 8)])
-#     grader.require_is_equal(2, pf.particles[(11, 6)])
-#     grader.require_is_equal(0, pf.particles[(18, 7)]) # 0 --> 1
-#     grader.require_is_equal(1, pf.particles[(20, 5)]) # 1 --> 0
+    grader.require_is_equal(4, pf.particles[(3, 9)])
+    grader.require_is_equal(0, pf.particles[(2, 10)]) # 0 --> 0
+    grader.require_is_equal(5, pf.particles[(8, 4)])
+    grader.require_is_equal(3, pf.particles[(12, 6)])
+    grader.require_is_equal(0, pf.particles[(7, 8)])
+    grader.require_is_equal(2, pf.particles[(11, 6)])
+    grader.require_is_equal(0, pf.particles[(18, 7)]) # 0 --> 1
+    grader.require_is_equal(1, pf.particles[(20, 5)]) # 1 --> 0
 
-# grader.add_basic_part('3a-1-basic', test3a_1, 2, description="3a basic test for PF elapseTime")
+grader.add_basic_part('3a-1-basic', test3a_1, 2, description="3a basic test for PF elapseTime")
 
-# def test3a_2():
-#     random.seed(3)
-#     pf = submission.ParticleFilter(30, 13)
-#     grader.require_is_equal(69, len([k for k, v in list(pf.particles.items()) if v > 0])) # This should not fail unless your code changed the random initialization code.
+def test3a_2():
+    random.seed(3)
+    pf = submission.ParticleFilter(30, 13)
+    grader.require_is_equal(69, len([k for k, v in list(pf.particles.items()) if v > 0])) # This should not fail unless your code changed the random initialization code.
 
-#     pf.elapseTime()
-#     grader.require_is_equal(58, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
-#     pf.observe(555, 193, 800)
+    pf.elapseTime()
+    grader.require_is_equal(58, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
+    pf.observe(555, 193, 800)
 
-#     grader.require_is_equal(200, sum(pf.particles.values())) # Do not lose particles
-#     grader.require_is_equal(2, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
-#     grader.require_is_equal(0.025, pf.belief.getProb(20, 4))
-#     grader.require_is_equal(0.0, pf.belief.getProb(21, 5))
-#     grader.require_is_equal(0.0, pf.belief.getProb(21, 6))
-#     grader.require_is_equal(0.975, pf.belief.getProb(22, 6))
-#     grader.require_is_equal(0.0, pf.belief.getProb(22, 7))
+    grader.require_is_equal(200, sum(pf.particles.values())) # Do not lose particles
+    grader.require_is_equal(2, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
+    grader.require_is_equal(0.025, pf.belief.getProb(20, 4))
+    grader.require_is_equal(0.0, pf.belief.getProb(21, 5))
+    grader.require_is_equal(0.0, pf.belief.getProb(21, 6))
+    grader.require_is_equal(0.975, pf.belief.getProb(22, 6))
+    grader.require_is_equal(0.0, pf.belief.getProb(22, 7))
 
-#     pf.elapseTime()
-#     grader.require_is_equal(4, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
+    pf.elapseTime()
+    grader.require_is_equal(4, len([k for k, v in list(pf.particles.items()) if v > 0])) # Most particles lie on the same (row, col) locations
 
-#     pf.observe(660, 193, 50)
-#     grader.require_is_equal(0.0, pf.belief.getProb(20, 4))
-#     grader.require_is_equal(0.0, pf.belief.getProb(21, 5))
-#     grader.require_is_equal(0.0, pf.belief.getProb(21, 6))
-#     grader.require_is_equal(0.0, pf.belief.getProb(22, 6))
-#     grader.require_is_equal(1.0, pf.belief.getProb(22, 7))
+    pf.observe(660, 193, 50)
+    grader.require_is_equal(0.0, pf.belief.getProb(20, 4))
+    grader.require_is_equal(0.0, pf.belief.getProb(21, 5))
+    grader.require_is_equal(0.0, pf.belief.getProb(21, 6))
+    grader.require_is_equal(0.0, pf.belief.getProb(22, 6))
+    grader.require_is_equal(1.0, pf.belief.getProb(22, 7))
 
-# grader.add_basic_part('3a-2-basic', test3a_2, 3, description="3a basic test for PF observe AND elapseTime")
+grader.add_basic_part('3a-2-basic', test3a_2, 3, description="3a basic test for PF observe AND elapseTime")
 
-# def test3a_3i(): # basic observe stress test
-#     random.seed(SEED + 34)
-#     A = 30
-#     B = 30
-#     pf = submission.ParticleFilter(A, B)
-#     if solution_exist:
-#         random.seed(SEED + 34)
-#         sol = solution.ParticleFilter(A, B)
+def test3a_3i(): # basic observe stress test
+    random.seed(SEED + 34)
+    A = 30
+    B = 30
+    pf = submission.ParticleFilter(A, B)
+    if solution_exist:
+        random.seed(SEED + 34)
+        sol = solution.ParticleFilter(A, B)
 
-#     N = 50
+    N = 50
     
-#     for i in range(N):
-#         SEED_MODE = 1000 # setup the random seed for fairness
-#         seed = int(random.random() * SEED_MODE)
-#         nextSeed = int(random.random() * SEED_MODE)
+    for i in range(N):
+        SEED_MODE = 1000 # setup the random seed for fairness
+        seed = int(random.random() * SEED_MODE)
+        nextSeed = int(random.random() * SEED_MODE)
 
-#         a = int(random.random() * 30)
-#         b = int(random.random() * 5)
-#         c = int(random.random() * 30)
+        a = int(random.random() * 30)
+        b = int(random.random() * 5)
+        c = int(random.random() * 30)
 
-#         random.seed(seed)
-#         pf.observe(a, b, c)
-#         if solution_exist:
-#             random.seed(seed)
-#             sol.observe(a, b, c)
+        random.seed(seed)
+        pf.observe(a, b, c)
+        if solution_exist:
+            random.seed(seed)
+            sol.observe(a, b, c)
 
-#         for d in range(A):
-#             for e in range(B):
-#                 pred = pf.belief.getProb(d, e)
-#                 if solution_exist:
-#                     answer = sol.belief.getProb(d, e)
-#                     grader.require_is_equal(answer, pred)
+        for d in range(A):
+            for e in range(B):
+                pred = pf.belief.getProb(d, e)
+                if solution_exist:
+                    answer = sol.belief.getProb(d, e)
+                    grader.require_is_equal(answer, pred)
 
-#         random.seed(nextSeed)
+        random.seed(nextSeed)
 
-# grader.add_hidden_part('3a-3i-hidden', test3a_3i, 2, description="3a advanced test for PF observe")
+grader.add_hidden_part('3a-3i-hidden', test3a_3i, 2, description="3a advanced test for PF observe")
 
-# def test3a_3ii(): # observe stress test with whether they put the pdf in the correct order or not
-#     random.seed(SEED + 34)
+def test3a_3ii(): # observe stress test with whether they put the pdf in the correct order or not
+    random.seed(SEED + 34)
 
-#     oldpdf = util.pdf
-#     del util.pdf
-#     def pdf(a, b, c): # You can't swap a and c now!
-#         return a + b
-#     util.pdf = pdf
+    oldpdf = util.pdf
+    del util.pdf
+    def pdf(a, b, c): # You can't swap a and c now!
+        return a + b
+    util.pdf = pdf
 
-#     A = 30
-#     B = 30
-#     pf = submission.ParticleFilter(A, B)
-#     if solution_exist:
-#         random.seed(SEED + 34)
-#         sol = solution.ParticleFilter(A, B)
+    A = 30
+    B = 30
+    pf = submission.ParticleFilter(A, B)
+    if solution_exist:
+        random.seed(SEED + 34)
+        sol = solution.ParticleFilter(A, B)
 
-#     N = 50
+    N = 50
     
-#     for i in range(N):
-#         SEED_MODE = 1000 # setup the random seed for fairness
-#         seed = int(random.random() * SEED_MODE)
-#         nextSeed = int(random.random() * SEED_MODE)
+    for i in range(N):
+        SEED_MODE = 1000 # setup the random seed for fairness
+        seed = int(random.random() * SEED_MODE)
+        nextSeed = int(random.random() * SEED_MODE)
 
-#         a = int(random.random() * 30)
-#         b = int(random.random() * 5)
-#         c = int(random.random() * 30)
+        a = int(random.random() * 30)
+        b = int(random.random() * 5)
+        c = int(random.random() * 30)
 
-#         random.seed(seed)
-#         pf.observe(a, b, c)
-#         if solution_exist:
-#             random.seed(seed)
-#             sol.observe(a, b, c)
+        random.seed(seed)
+        pf.observe(a, b, c)
+        if solution_exist:
+            random.seed(seed)
+            sol.observe(a, b, c)
 
-#         for d in range(A):
-#             for e in range(B):
-#                 pred = pf.belief.getProb(d, e)
-#                 if solution_exist:
-#                     answer = sol.belief.getProb(d, e)
-#                     grader.require_is_equal(answer, pred)
+        for d in range(A):
+            for e in range(B):
+                pred = pf.belief.getProb(d, e)
+                if solution_exist:
+                    answer = sol.belief.getProb(d, e)
+                    grader.require_is_equal(answer, pred)
 
-#         random.seed(nextSeed)
+        random.seed(nextSeed)
 
 
-#     util.pdf = oldpdf # fix the pdf
+    util.pdf = oldpdf # fix the pdf
 
-# grader.add_hidden_part('3a-3ii-hidden', test3a_3ii, 2, description="3a test for pdf ordering")
+grader.add_hidden_part('3a-3ii-hidden', test3a_3ii, 2, description="3a test for pdf ordering")
 
-# def test3a_4():
-#     A = 30
-#     B = 30
-#     random.seed(SEED + 35)
-#     pf = submission.ParticleFilter(A, B)
-#     if solution_exist:
-#         random.seed(SEED + 35)
-#         sol = solution.ParticleFilter(A, B)
+def test3a_4():
+    A = 30
+    B = 30
+    random.seed(SEED + 35)
+    pf = submission.ParticleFilter(A, B)
+    if solution_exist:
+        random.seed(SEED + 35)
+        sol = solution.ParticleFilter(A, B)
 
-#     N1 = 20
-#     N2 = 400
+    N1 = 20
+    N2 = 400
     
-#     for i in range(N1):
-#         SEED_MODE = 1000 # setup the random seed for fairness
-#         seed = int(random.random() * SEED_MODE)
-#         nextSeed = int(random.random() * SEED_MODE)
+    for i in range(N1):
+        SEED_MODE = 1000 # setup the random seed for fairness
+        seed = int(random.random() * SEED_MODE)
+        nextSeed = int(random.random() * SEED_MODE)
 
-#         random.seed(seed)
-#         pf.elapseTime()
-#         if solution_exist:
-#             random.seed(seed)
-#             sol.elapseTime()
+        random.seed(seed)
+        pf.elapseTime()
+        if solution_exist:
+            random.seed(seed)
+            sol.elapseTime()
 
-#         for i in range(N2):
-#             d = int(random.random() * A)
-#             e = int(random.random() * B)
+        for i in range(N2):
+            d = int(random.random() * A)
+            e = int(random.random() * B)
 
-#             pred = pf.belief.getProb(d, e)
-#             if solution_exist:
-#                 answer = sol.belief.getProb(d, e)
-#                 grader.require_is_equal(answer, pred)
-#         random.seed(nextSeed)
+            pred = pf.belief.getProb(d, e)
+            if solution_exist:
+                answer = sol.belief.getProb(d, e)
+                grader.require_is_equal(answer, pred)
+        random.seed(nextSeed)
 
-# grader.add_hidden_part('3a-4-hidden', test3a_4, 3, description="advanced test for PF elapseTime")
+grader.add_hidden_part('3a-4-hidden', test3a_4, 3, description="advanced test for PF elapseTime")
 
-# def test3a_5():
-#     A = 30
-#     B = 30
-#     random.seed(SEED + 36)
-#     pf = submission.ParticleFilter(A, B)
-#     if solution_exist:
-#         random.seed(SEED + 36)
-#         sol = solution.ParticleFilter(A, B)
+def test3a_5():
+    A = 30
+    B = 30
+    random.seed(SEED + 36)
+    pf = submission.ParticleFilter(A, B)
+    if solution_exist:
+        random.seed(SEED + 36)
+        sol = solution.ParticleFilter(A, B)
 
-#     N1 = 20
-#     N2 = 400
+    N1 = 20
+    N2 = 400
     
-#     for i in range(N1):
-#         SEED_MODE = 1000 # setup the random seed for fairness
-#         seed = int(random.random() * SEED_MODE)
-#         seed2 = int(random.random() * SEED_MODE)
-#         nextSeed = int(random.random() * SEED_MODE)
+    for i in range(N1):
+        SEED_MODE = 1000 # setup the random seed for fairness
+        seed = int(random.random() * SEED_MODE)
+        seed2 = int(random.random() * SEED_MODE)
+        nextSeed = int(random.random() * SEED_MODE)
 
-#         random.seed(seed)
-#         pf.elapseTime()
-#         if solution_exist:
-#             random.seed(seed)
-#             sol.elapseTime()
+        random.seed(seed)
+        pf.elapseTime()
+        if solution_exist:
+            random.seed(seed)
+            sol.elapseTime()
 
-#         a = int(random.random() * 5 * A)
-#         b = int(random.random() * 5)
-#         c = int(random.random() * 5 * A)
+        a = int(random.random() * 5 * A)
+        b = int(random.random() * 5)
+        c = int(random.random() * 5 * A)
 
-#         random.seed(seed2)
-#         pf.observe(a, b, c)
-#         if solution_exist:
-#             random.seed(seed2)
-#             sol.observe(a, b, c)
+        random.seed(seed2)
+        pf.observe(a, b, c)
+        if solution_exist:
+            random.seed(seed2)
+            sol.observe(a, b, c)
 
-#         for i in range(N2):
-#             d = int(random.random() * A)
-#             e = int(random.random() * B)
+        for i in range(N2):
+            d = int(random.random() * A)
+            e = int(random.random() * B)
 
-#             pred = pf.belief.getProb(d, e)
-#             if solution_exist:
-#                 answer = sol.belief.getProb(d, e)
-#                 grader.require_is_equal(answer, pred)
-#         random.seed(nextSeed)
+            pred = pf.belief.getProb(d, e)
+            if solution_exist:
+                answer = sol.belief.getProb(d, e)
+                grader.require_is_equal(answer, pred)
+        random.seed(nextSeed)
 
-# grader.add_hidden_part('3a-5-hidden', test3a_5, 4, description="advanced test for PF observe AND elapseTime")
+grader.add_hidden_part('3a-5-hidden', test3a_5, 4, description="advanced test for PF observe AND elapseTime")
 
 grader.grade()

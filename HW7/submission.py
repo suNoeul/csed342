@@ -88,10 +88,8 @@ class ExactInference(object):
         # BEGIN_YOUR_CODE (our solution is 8 lines of code, but don't worry if you deviate from this)
         belief = self.belief
         new_belief = util.Belief(belief.getNumRows(), belief.getNumCols(), 0.0)          
-        for (oldTile, newTile), transProb in self.transProb.items():
-            old_r, old_c = oldTile
-            new_r, new_c = newTile              
-            new_belief.addProb(new_r, new_c, belief.getProb(old_r, old_c)  * transProb)
+        for (oldTile, newTile), transProb in self.transProb.items():           
+            new_belief.addProb(newTile[0], newTile[1], belief.getProb(oldTile[0], oldTile[1])  * transProb)
         new_belief.normalize()   
         self.belief = new_belief
         # END_YOUR_CODE
@@ -195,7 +193,24 @@ class ParticleFilter(object):
     ##################################################################################
     def observe(self, agentX: int, agentY: int, observedDist: float) -> None:
         # BEGIN_YOUR_CODE (our solution is 13 lines of code, but don't worry if you deviate from this)
-        raise NotImplementedError
+        
+        # Re-weight the particles 
+        weights = collections.defaultdict(float)
+        for Tile in self.particles:
+            x, y = util.colToX(Tile[1]), util.rowToY(Tile[0]) 
+            dist = math.sqrt((agentX-x)**2 + (agentY-y)**2)
+            prob = util.pdf(dist, Const.SONAR_STD, observedDist)
+            weights[Tile] = prob * self.particles[Tile]
+
+        if sum(weights.values()) == 0:
+            return
+        
+        # Re-sample the particles
+        new_particles = collections.defaultdict(int)
+        for _ in range(self.NUM_PARTICLES):
+            chosen_location = util.weightedRandomChoice(weights)
+            new_particles[chosen_location] += 1
+        self.particles = new_particles
         # END_YOUR_CODE
 
         self.updateBelief()
@@ -225,7 +240,12 @@ class ParticleFilter(object):
     ##################################################################################
     def elapseTime(self) -> None:
         # BEGIN_YOUR_CODE (our solution is 6 lines of code, but don't worry if you deviate from this)
-        raise NotImplementedError
+        new_particles = collections.defaultdict(int)
+        for particle in self.particles:
+            for _ in range(self.particles[particle]):
+                newTile = util.weightedRandomChoice(self.transProbDict[particle])
+                new_particles[newTile] += 1
+        self.particles = new_particles
         # END_YOUR_CODE
 
     # Function: Get Belief

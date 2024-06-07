@@ -1,0 +1,17 @@
+class MinimaxAgent(MultiAgentSearchAgent):
+  """
+    Your minimax agent (problem 1)
+  """
+
+  def getAction(self, gameState):
+    # BEGIN_YOUR_ANSWER
+
+    # Collect legal moves and successor states 
+    legalMoves = gameState.getLegalAction(0)
+    
+
+    # print("Best minimax value at depth {}: {}".format(self.depth, bestScore))
+    return legalMoves[chosenIndex]
+
+    # END_YOUR_ANSWER
+  

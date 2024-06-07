@@ -15,6 +15,7 @@ def create_chain_csp(n):
     variables = ['x%d'%i for i in range(1, n+1)]
     csp = util.CSP()
     # Problem 1a
+
     # BEGIN_YOUR_ANSWER
     def xor(x,y) :
         return x ^ y
@@ -25,6 +26,7 @@ def create_chain_csp(n):
         v1, v2 = variables[i-1], variables[i]
         csp.add_binary_factor(v1, v2, xor)
     # END_YOUR_ANSWER
+
     return csp
 
 
@@ -285,8 +287,8 @@ def get_sum_variable(csp, name, variables, maxSum):
         else:
             domain = [(j, k) for j in range(0, maxSum+1) for k in range(0, maxSum+1)]
             csp.add_variable(Y_curr, domain)
-            csp.add_binary_factor(Y_prev, Y_curr, lambda x, y : x[1] == y[0])
-            csp.add_binary_factor(X_i, Y_curr, lambda x, y: y[1] == (x + y[0]))        
+            csp.add_binary_factor(Y_prev, Y_curr, lambda x, y :      x[1]  == y[0])
+            csp.add_binary_factor(   X_i, Y_curr, lambda x, y : (x + y[0]) == y[1])        
         Y_prev = Y_curr
     
     csp.add_variable(result, range(0, maxSum+1))
